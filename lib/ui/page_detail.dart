@@ -157,14 +157,6 @@ class _DetailPageState extends State<DetailPage> {
                     (element['daysdone'] as List).length;
                 activityDaysGortCount += (element['days'] as List).length;
 
-                print(
-                  List<String>.from(element['days']),
-                );
-
-                List<String> nnn = [];
-                nnn = List<String>.from(element['daysdone']);
-                print(nnn);
-
                 activities.add(
                   Activity(
                     id: f.id,
