@@ -314,7 +314,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                         },
                                         itemCount: notificationTimes.length,
                                       )
-                                    : Container(),
+                                    : const SizedBox.shrink(),
                                 Align(
                                   alignment: Alignment.bottomCenter,
                                   child: Padding(
@@ -496,7 +496,7 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   BannerAd _bannerAd;
-  bool _isBannerAdReady = false;
+  final bool _isBannerAdReady = false;
 
   // final _inlineAdIndex = 3;
 
@@ -552,23 +552,33 @@ class _ActivityPageState extends State<ActivityPage> {
 
   Color pickerColor;
   Color currentColor;
-  List<String> frequencyButtons = ["1", "2", "3", "4", "5", "6", "7"];
+  final List<String> frequencyButtons = <String>[
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ];
 
   Padding _getToolbar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 12.0),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: const Icon(
-            Icons.arrow_back,
-            size: 40.0,
-            color: Colors.black,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: const Icon(
+              Icons.arrow_back,
+              size: 40.0,
+              color: Colors.black,
+            ),
           ),
-        ),
-        GestureDetector(
+          GestureDetector(
             onTap: () {
               if (showsettings == false) {
                 setState(() {
@@ -582,8 +592,10 @@ class _ActivityPageState extends State<ActivityPage> {
                 });
               }
             },
-            child: Container())
-      ]),
+            child: const SizedBox.shrink(),
+          )
+        ],
+      ),
     );
   }
 }

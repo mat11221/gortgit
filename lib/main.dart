@@ -16,7 +16,6 @@ import 'package:gort/ui/page_task.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
-import 'ui/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 //   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -362,84 +361,6 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildPasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        // Text(
-        //   'Password',
-        //   style: kLabelStyle,
-        // ),
-        // SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            onChanged: (value) => _password = value,
-            obscureText: true,
-            style: const TextStyle(
-              color: Color.fromARGB(255, 37, 72, 247),
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.only(top: 1.0, left: 10),
-              // prefixIcon: Icon(
-              //   Icons.lock,
-              //   color: Colors.white,
-              // ),
-              hintText: 'Password',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoginBtn() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
-        // elevation: 5.0,
-        onPressed: () async {
-          try {
-            UserCredential result = await _auth.signInWithEmailAndPassword(
-              email: _email,
-              password: _password,
-            );
-
-            if (!mounted) return;
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => HomePage(
-                        user: result.user,
-                      )),
-            );
-          } catch (e) {}
-        },
-        // padding: EdgeInsets.all(15.0),
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.circular(30.0),
-
-        child: const Text(
-          'LOGIN',
-          style: TextStyle(
-            color: Color(0xFF527DAA),
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildLoginBtnGuest() {
     return GestureDetector(
       onTap: () async {
@@ -491,25 +412,6 @@ class LoginPageState extends State<LoginPage> {
               )
             ]),
       ),
-    );
-  }
-
-  Widget _buildSignInWithText() {
-    return Column(
-      children: const <Widget>[
-        Text(
-          '- OR -',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        // SizedBox(height: 20.0),
-        // Text(
-        //   'Sign in with',
-        //   style: kLabelStyle,
-        // ),
-      ],
     );
   }
 
@@ -592,29 +494,6 @@ class LoginPageState extends State<LoginPage> {
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
-  Widget _buildSocialBtnRow() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          // _buildSocialBtn(
-          //   () => print('Login with Facebook'),
-          //   AssetImage(
-          //     'assets/logos/facebook.jpg',
-          //   ),
-          // ),
-          _buildSocialBtn(
-            () => print('Login with Facebook'),
-            const AssetImage(
-              'assets/logos/google.jpg',
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildSignupBtn() {

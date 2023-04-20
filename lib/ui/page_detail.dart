@@ -27,13 +27,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:gort/model/element.dart';
 import 'package:gort/ui/page_activity.dart';
-import 'package:gort/ui/video.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
 import 'package:pie_menu/pie_menu.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as pt;
 import 'globals.dart' as globals;
+import 'package:collection/collection.dart';
 
 class DetailPage extends StatefulWidget {
   final int i;
@@ -140,12 +140,22 @@ class _DetailPageState extends State<DetailPage> {
   List<Activity> newactivities = [];
   int totalDaysGortCount = 0;
   int totalDaysDoneGortCount = 0;
+  int str2 = 0;
 
   getExpenseItems(AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
     List<Activity> activities = [];
-    List<String> gortdocnames = [];
     int activityDaysGortCount = 0;
     int activityDaysDoneGortCount = 0;
+    List<String> alldays = [];
+    List<String> alldays2 = [];
+    List<int> alldays3 = [];
+    int str = 0;
+    List<int> allpotdays3 = [];
+    int potstr = 0;
+
+    Map<String, int> counts;
+    Map<String, int> counts2;
+
     if (currentuser != null) {
       // ignore: missing_return
       snapshot.data.docs.map<Widget>((f) {
@@ -156,6 +166,25 @@ class _DetailPageState extends State<DetailPage> {
                 activityDaysDoneGortCount +=
                     (element['daysdone'] as List).length;
                 activityDaysGortCount += (element['days'] as List).length;
+                for (var day in element['daysdone']) {
+                  alldays.add(day.toString());
+                }
+                alldays.sort();
+
+                for (var day in element['days']) {
+                  alldays2.add((int.parse(day) - 1).toString());
+                }
+                alldays2.sort();
+
+                counts = alldays.fold<Map<String, int>>({}, (map, element) {
+                  map[element] = (map[element] ?? 0) + 1;
+                  return map;
+                });
+
+                counts2 = alldays2.fold<Map<String, int>>({}, (map, element) {
+                  map[element] = (map[element] ?? 0) + 1;
+                  return map;
+                });
 
                 activities.add(
                   Activity(
@@ -180,6 +209,99 @@ class _DetailPageState extends State<DetailPage> {
           });
         }
       }).toList();
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (counts['0'] == counts2['0']) {
+          alldays3.add(int.parse(counts['0'].toString()));
+          // if (counts['1'] == null) {
+          // str = (alldays3.sum);
+          // }else{
+          str = (alldays3.sum + int.parse(counts['1'].toString()));
+          // }
+          print(str);
+
+          if (counts['1'] == counts2['1']) {
+            alldays3.add(int.parse(counts['1'].toString()));
+            str = (alldays3.sum + int.parse(counts['2'].toString()));
+            print(str);
+
+            if (counts['2'] == counts2['2']) {
+              alldays3.add(int.parse(counts['2'].toString()));
+              str = (alldays3.sum + int.parse(counts['3'].toString()));
+              print(str);
+
+              if (counts['3'] == counts2['3']) {
+                alldays3.add(int.parse(counts['3'].toString()));
+                str = (alldays3.sum + int.parse(counts['4'].toString()));
+                print(str);
+
+                if (counts['4'] == counts2['4']) {
+                  alldays3.add(int.parse(counts['4'].toString()));
+                  str = (alldays3.sum + int.parse(counts['5'].toString()));
+                  print(str);
+
+                  if (counts['5'] == counts2['5']) {
+                    alldays3.add(int.parse(counts['5'].toString()));
+                    str = (alldays3.sum + int.parse(counts['6'].toString()));
+                    print(str);
+
+                    if (counts['6'] == counts2['6']) {
+                      alldays3.add(int.parse(counts['6'].toString()));
+                      str = (alldays3.sum);
+                      print(str);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (counts['6'] == counts2['6']) {
+          allpotdays3.add(int.parse(counts['6'].toString()));
+
+          potstr = (allpotdays3.sum);
+          print(potstr);
+
+          if (counts['5'] == counts2['5']) {
+            allpotdays3.add(int.parse(counts['5'].toString()));
+            potstr = (allpotdays3.sum);
+            print(potstr);
+
+            if (counts['4'] == counts2['4']) {
+              allpotdays3.add(int.parse(counts['4'].toString()));
+              potstr = (allpotdays3.sum);
+              print(potstr);
+
+              if (counts['3'] == counts2['3']) {
+                allpotdays3.add(int.parse(counts['3'].toString()));
+                potstr = (allpotdays3.sum);
+                print(potstr);
+
+                if (counts['2'] == counts2['2']) {
+                  allpotdays3.add(int.parse(counts['2'].toString()));
+                  potstr = (allpotdays3.sum);
+                  print(potstr);
+
+                  if (counts['1'] == counts2['1']) {
+                    allpotdays3.add(int.parse(counts['1'].toString()));
+                    potstr = (allpotdays3.sum);
+                    print(potstr);
+
+                    if (counts['0'] == counts2['0']) {
+                      allpotdays3.add(int.parse(counts['0'].toString()));
+                      potstr = (allpotdays3.sum);
+                      print(potstr);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
 
       return SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -272,60 +394,159 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                 ],
                               )),
-                          Visibility(
-                              visible: showcontent,
-                              child: activities.isNotEmpty
-                                  ? Visibility(
-                                      visible: !newweek,
-                                      child: Column(children: [
-                                        Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 6),
-                                            child: CircularPercentIndicator(
-                                                radius: 30.0,
-                                                animation: true,
-                                                animationDuration: 1200,
-                                                lineWidth: 6.0,
-                                                percent:
-                                                    totalDaysDoneGortCount /
-                                                        totalDaysGortCount,
-                                                center: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      totalDaysDoneGortCount
-                                                          .toString(),
-                                                      style: const TextStyle(
+                          Padding(
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Visibility(
+                                        visible: showcontent,
+                                        child: activities.isNotEmpty
+                                            ? Visibility(
+                                                visible: !newweek,
+                                                child: Column(children: [
+                                                  Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 6),
+                                                      child:
+                                                          CircularPercentIndicator(
+                                                              radius: 30.0,
+                                                              animation: true,
+                                                              animationDuration:
+                                                                  1200,
+                                                              lineWidth: 6.0,
+                                                              percent:
+                                                                  totalDaysDoneGortCount /
+                                                                      totalDaysGortCount,
+                                                              center: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    (str)
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            20.0),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              circularStrokeCap:
+                                                                  CircularStrokeCap
+                                                                      .round,
+                                                              backgroundColor:
+                                                                  const Color
+                                                                          .fromARGB(
+                                                                      255,
+                                                                      228,
+                                                                      228,
+                                                                      228),
+                                                              progressColor:
+                                                                  const Color
+                                                                          .fromARGB(
+                                                                      255,
+                                                                      241,
+                                                                      76,
+                                                                      76))),
+                                                  const Padding(
+                                                    padding:
+                                                        EdgeInsets.only(top: 5),
+                                                    child: Text(
+                                                      'Current Streak',
+                                                      style: TextStyle(
                                                           color: Colors.white,
                                                           fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 20.0),
+                                                              FontWeight.normal,
+                                                          fontSize: 10),
                                                     ),
-                                                  ],
-                                                ),
-                                                circularStrokeCap:
-                                                    CircularStrokeCap.round,
-                                                backgroundColor:
-                                                    const Color.fromARGB(
-                                                        255, 228, 228, 228),
-                                                progressColor:
-                                                    const Color.fromARGB(
-                                                        255, 241, 76, 76))),
-                                        const Padding(
-                                          padding: EdgeInsets.only(top: 5),
-                                          child: Text(
-                                            'Potential Streak',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: 10),
-                                          ),
-                                        )
-                                      ]))
-                                  : Container()),
+                                                  )
+                                                ]))
+                                            : Container()),
+                                    Visibility(
+                                        visible: showcontent,
+                                        child: activities.isNotEmpty
+                                            ? Visibility(
+                                                visible: !newweek,
+                                                child: Column(children: [
+                                                  Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 6),
+                                                      child:
+                                                          CircularPercentIndicator(
+                                                              radius: 30.0,
+                                                              animation: true,
+                                                              animationDuration:
+                                                                  1200,
+                                                              lineWidth: 6.0,
+                                                              percent:
+                                                                  totalDaysDoneGortCount /
+                                                                      totalDaysGortCount,
+                                                              center: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    potstr
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            20.0),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              circularStrokeCap:
+                                                                  CircularStrokeCap
+                                                                      .round,
+                                                              backgroundColor:
+                                                                  const Color
+                                                                          .fromARGB(
+                                                                      255,
+                                                                      228,
+                                                                      228,
+                                                                      228),
+                                                              progressColor:
+                                                                  const Color
+                                                                          .fromARGB(
+                                                                      255,
+                                                                      241,
+                                                                      76,
+                                                                      76))),
+                                                  const Padding(
+                                                    padding:
+                                                        EdgeInsets.only(top: 5),
+                                                    child: Text(
+                                                      'Potential Streak',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          fontSize: 10),
+                                                    ),
+                                                  )
+                                                ]))
+                                            : Container()),
+                                  ])),
                           Padding(
                             padding: const EdgeInsets.only(top: 0.0),
                             child: Column(
@@ -352,7 +573,7 @@ class _DetailPageState extends State<DetailPage> {
                                                   height: 50,
                                                 ),
                                                 Text(
-                                                  'Create activities that help you achieve your rt!',
+                                                  'Create activities that help you achieve your Gört!',
                                                   style:
                                                       TextStyle(fontSize: 20),
                                                   textAlign: TextAlign.center,
@@ -484,7 +705,7 @@ class _DetailPageState extends State<DetailPage> {
                                       child: Row(
                                         children: const [
                                           Text(
-                                            'Visualize your  success',
+                                            'Visualize your Gört success',
                                             style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w700,
@@ -593,10 +814,7 @@ class _DetailPageState extends State<DetailPage> {
                                                                       height:
                                                                           200,
                                                                       width:
-                                                                          200,
-                                                                      child: VideoPlay(
-                                                                          pathh:
-                                                                              webvideos[index]));
+                                                                          200);
                                                                 },
                                                                 itemCount:
                                                                     webvideos
@@ -746,14 +964,7 @@ class _DetailPageState extends State<DetailPage> {
                                                 itemBuilder: (BuildContext ctx,
                                                     int index) {
                                                   return SizedBox(
-                                                      height: 100,
-                                                      width: 100,
-                                                      child: VideoFilePlay(
-                                                        pathh: File(
-                                                            videoFileListM[
-                                                                    index]
-                                                                .path),
-                                                      ));
+                                                      height: 100, width: 100);
                                                 },
                                                 itemCount:
                                                     videoFileListM.length,
@@ -1097,7 +1308,7 @@ class _DetailPageState extends State<DetailPage> {
                                                                           decoration: InputDecoration(
                                                                               fillColor: Colors.black,
                                                                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(25), borderSide: const BorderSide(color: Colors.teal)),
-                                                                              labelText: " name",
+                                                                              labelText: "Gört name",
                                                                               // errorText: _validate
                                                                               //     ? 'Value Can\'t Be Empty'
                                                                               //     : null,
@@ -1149,10 +1360,137 @@ class _DetailPageState extends State<DetailPage> {
                                                                         true;
                                                                   });
                                                                 } else {
-                                                                  setState(() {
-                                                                    showNewGort =
-                                                                        true;
-                                                                  });
+                                                                  if (!mounted)
+                                                                    return;
+                                                                  showGeneralDialog(
+                                                                      context:
+                                                                          context,
+                                                                      barrierColor:
+                                                                          GortAppTheme
+                                                                              .background,
+                                                                      barrierDismissible:
+                                                                          false,
+                                                                      barrierLabel:
+                                                                          'Dialog',
+                                                                      transitionDuration:
+                                                                          const Duration(
+                                                                              milliseconds:
+                                                                                  400),
+                                                                      pageBuilder: (_,
+                                                                          __,
+                                                                          ___) {
+                                                                        return Scaffold(
+                                                                            body:
+                                                                                Column(
+                                                                          children: <
+                                                                              Widget>[
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.only(top: 60, left: 15),
+                                                                              child: GestureDetector(
+                                                                                onTap: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                                child: Row(
+                                                                                  children: const [
+                                                                                    Icon(
+                                                                                      Icons.close,
+                                                                                      size: 40.0,
+                                                                                      color: Colors.black,
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 40,
+                                                                            ),
+                                                                            const Text(
+                                                                              'GET PREMIUM',
+                                                                              style: TextStyle(fontSize: 20),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 5,
+                                                                            ),
+                                                                            Container(
+                                                                              color: GortAppTheme.darkText,
+                                                                              height: 1,
+                                                                              width: MediaQuery.of(context).size.width * 0.7,
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 40,
+                                                                            ),
+                                                                            const Text(
+                                                                              'Remove ads',
+                                                                              style: TextStyle(fontSize: 20),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 25,
+                                                                            ),
+                                                                            const Text(
+                                                                              'Unlimited Görts',
+                                                                              style: TextStyle(fontSize: 20),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 40,
+                                                                            ),
+                                                                            const Icon(
+                                                                              Icons.payment_rounded,
+                                                                              size: 100,
+                                                                              color: GortAppTheme.darkText,
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 20,
+                                                                            ),
+                                                                            const Text(
+                                                                              '19kr/Månad',
+                                                                              style: TextStyle(fontSize: 35, fontWeight: FontWeight.w800),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 40,
+                                                                            ),
+                                                                            Expanded(
+                                                                                child: Align(
+                                                                              alignment: Alignment.bottomCenter,
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(top: 50.0, bottom: 40),
+                                                                                child: SizedBox(
+                                                                                  width: MediaQuery.of(context).size.width * 0.7,
+                                                                                  child: ElevatedButton(
+                                                                                    onPressed: () async {
+                                                                                      try {
+                                                                                        CustomerInfo customerInfo = await Purchases.purchaseProduct('premium_1m');
+                                                                                        var isPro = customerInfo.entitlements.all['premium_1m'].isActive;
+                                                                                        if (isPro) {
+                                                                                          if (!mounted) return;
+                                                                                          Navigator.of(context).pop();
+                                                                                          // Unlock that great "pro" content
+                                                                                        }
+                                                                                      } on UnsupportedPlatformException catch (e) {
+                                                                                        var errorCode = PurchasesErrorHelper.getErrorCode(e as PlatformException);
+                                                                                        if (errorCode != PurchasesErrorCode.purchaseCancelledError) {}
+                                                                                      }
+                                                                                    },
+                                                                                    style: ElevatedButton.styleFrom(
+                                                                                      backgroundColor: GortAppTheme.darkText,
+                                                                                      shape: RoundedRectangleBorder(
+                                                                                        borderRadius: BorderRadius.circular(25),
+                                                                                      ),
+                                                                                      elevation: 15.0,
+                                                                                    ),
+                                                                                    child: const Padding(
+                                                                                      padding: EdgeInsets.all(15.0),
+                                                                                      child: Text(
+                                                                                        'Subscribe',
+                                                                                        style: TextStyle(fontSize: 20, color: GortAppTheme.nearlyWhite),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ))
+                                                                          ],
+                                                                        ));
+                                                                      });
                                                                 }
                                                               },
                                                               title: const Card(
@@ -1333,6 +1671,26 @@ class _DetailPageState extends State<DetailPage> {
                                                                               .elementAt(i)
                                                                               .title);
 
+                                                                      //                                                                       if (documentName.isNotEmpty) {
+                                                                      //   for (var selectedDay in arr[i].daylist) {
+                                                                      //     for (var reminder in arr[i].timelist) {
+                                                                      //       var hrstring = reminder.hour.toString();
+                                                                      //       var mrstring = reminder.minute.toString();
+                                                                      //       var uniqid = int.parse(selectedDay + hrstring + mrstring);
+                                                                      //       createReminderNotification(
+                                                                      //           documentName,
+                                                                      //           gortdocnames.elementAt(index),
+                                                                      //           notificationidnumber + uniqid,
+                                                                      //           documentName,
+                                                                      //           documentName + listNameController.text.toString(),
+                                                                      //           NotificationWeekAndTime(
+                                                                      //             dayOfTheWeek: int.parse(selectedDay),
+                                                                      //             timeOfDay: reminder,
+                                                                      //           ));
+                                                                      //     }
+                                                                      //   }
+                                                                      // }
+
                                                                       var arr2 =
                                                                           activities;
                                                                       arr2.removeAt(
@@ -1422,7 +1780,7 @@ class _DetailPageState extends State<DetailPage> {
                                                                           decoration: InputDecoration(
                                                                               fillColor: Colors.black,
                                                                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(25), borderSide: const BorderSide(color: Colors.teal)),
-                                                                              labelText: " name",
+                                                                              labelText: "Gört name",
                                                                               // errorText: _validate
                                                                               //     ? 'Value Can\'t Be Empty'
                                                                               //     : null,
@@ -1457,6 +1815,8 @@ class _DetailPageState extends State<DetailPage> {
                                                                 !showNewGort,
                                                             child: ListTile(
                                                               onTap: () async {
+                                                                print(globals
+                                                                    .totalgort);
                                                                 CustomerInfo
                                                                     customerInfo =
                                                                     await Purchases
@@ -1474,10 +1834,137 @@ class _DetailPageState extends State<DetailPage> {
                                                                         true;
                                                                   });
                                                                 } else {
-                                                                  setState(() {
-                                                                    showNewGort =
-                                                                        true;
-                                                                  });
+                                                                  if (!mounted)
+                                                                    return;
+                                                                  showGeneralDialog(
+                                                                      context:
+                                                                          context,
+                                                                      barrierColor:
+                                                                          GortAppTheme
+                                                                              .background,
+                                                                      barrierDismissible:
+                                                                          false,
+                                                                      barrierLabel:
+                                                                          'Dialog',
+                                                                      transitionDuration:
+                                                                          const Duration(
+                                                                              milliseconds:
+                                                                                  400),
+                                                                      pageBuilder: (_,
+                                                                          __,
+                                                                          ___) {
+                                                                        return Scaffold(
+                                                                            body:
+                                                                                Column(
+                                                                          children: <
+                                                                              Widget>[
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.only(top: 60, left: 15),
+                                                                              child: GestureDetector(
+                                                                                onTap: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                                child: Row(
+                                                                                  children: const [
+                                                                                    Icon(
+                                                                                      Icons.close,
+                                                                                      size: 40.0,
+                                                                                      color: Colors.black,
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 40,
+                                                                            ),
+                                                                            const Text(
+                                                                              'GET PREMIUM',
+                                                                              style: TextStyle(fontSize: 20),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 5,
+                                                                            ),
+                                                                            Container(
+                                                                              color: GortAppTheme.darkText,
+                                                                              height: 1,
+                                                                              width: MediaQuery.of(context).size.width * 0.7,
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 40,
+                                                                            ),
+                                                                            const Text(
+                                                                              'Remove ads',
+                                                                              style: TextStyle(fontSize: 20),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 25,
+                                                                            ),
+                                                                            const Text(
+                                                                              'Unlimited Görts',
+                                                                              style: TextStyle(fontSize: 20),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 40,
+                                                                            ),
+                                                                            const Icon(
+                                                                              Icons.payment_rounded,
+                                                                              size: 100,
+                                                                              color: GortAppTheme.darkText,
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 20,
+                                                                            ),
+                                                                            const Text(
+                                                                              '19kr/Månad',
+                                                                              style: TextStyle(fontSize: 35, fontWeight: FontWeight.w800),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 40,
+                                                                            ),
+                                                                            Expanded(
+                                                                                child: Align(
+                                                                              alignment: Alignment.bottomCenter,
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.only(top: 50.0, bottom: 40),
+                                                                                child: SizedBox(
+                                                                                  width: MediaQuery.of(context).size.width * 0.7,
+                                                                                  child: ElevatedButton(
+                                                                                    onPressed: () async {
+                                                                                      try {
+                                                                                        CustomerInfo customerInfo = await Purchases.purchaseProduct('premium_1m');
+                                                                                        var isPro = customerInfo.entitlements.all['premium_1m'].isActive;
+                                                                                        if (isPro) {
+                                                                                          if (!mounted) return;
+                                                                                          Navigator.of(context).pop();
+                                                                                          // Unlock that great "pro" content
+                                                                                        }
+                                                                                      } on UnsupportedPlatformException catch (e) {
+                                                                                        var errorCode = PurchasesErrorHelper.getErrorCode(e as PlatformException);
+                                                                                        if (errorCode != PurchasesErrorCode.purchaseCancelledError) {}
+                                                                                      }
+                                                                                    },
+                                                                                    style: ElevatedButton.styleFrom(
+                                                                                      backgroundColor: GortAppTheme.darkText,
+                                                                                      shape: RoundedRectangleBorder(
+                                                                                        borderRadius: BorderRadius.circular(25),
+                                                                                      ),
+                                                                                      elevation: 15.0,
+                                                                                    ),
+                                                                                    child: const Padding(
+                                                                                      padding: EdgeInsets.all(15.0),
+                                                                                      child: Text(
+                                                                                        'Subscribe',
+                                                                                        style: TextStyle(fontSize: 20, color: GortAppTheme.nearlyWhite),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ))
+                                                                          ],
+                                                                        ));
+                                                                      });
                                                                 }
                                                               },
                                                               title: const Card(
@@ -1677,6 +2164,158 @@ class _DetailPageState extends State<DetailPage> {
                                       )));
                             },
                           ),
+                          // webvideos.isEmpty && webimages.isEmpty
+                          //     ? Container()
+                          //     : SizedBox(
+                          //         height: 200,
+                          //         child: Align(
+                          //             alignment: Alignment.centerLeft,
+                          //             child: ListView(
+                          //               physics: BouncingScrollPhysics(),
+                          //               scrollDirection: Axis.horizontal,
+                          //               shrinkWrap: true,
+                          //               children: [
+                          //                 ListView.builder(
+                          //                   physics:
+                          //                       const NeverScrollableScrollPhysics(),
+                          //                   shrinkWrap: true,
+                          //                   scrollDirection:
+                          //                       Axis.horizontal,
+                          //                   itemBuilder:
+                          //                       (BuildContext ctx,
+                          //                           int index) {
+                          //                     return SizedBox(
+                          //                         height: MediaQuery.of(
+                          //                                     context)
+                          //                                 .size
+                          //                                 .width *
+                          //                             0.2,
+                          //                         child: Card(
+                          //                           elevation: 0,
+                          //                           color: Colors
+                          //                               .transparent,
+                          //                           surfaceTintColor:
+                          //                               Colors
+                          //                                   .transparent,
+                          //                           margin:
+                          //                               const EdgeInsets
+                          //                                   .all(10),
+                          //                           shape:
+                          //                               RoundedRectangleBorder(
+                          //                             borderRadius:
+                          //                                 BorderRadius
+                          //                                     .circular(
+                          //                                         20.0),
+                          //                           ),
+                          //                           child: Align(
+                          //                             alignment: Alignment
+                          //                                 .center,
+                          //                             child: Container(
+                          //                               clipBehavior: Clip
+                          //                                   .antiAlias,
+                          //                               decoration:
+                          //                                   BoxDecoration(
+                          //                                 color: Colors
+                          //                                     .transparent,
+                          //                                 borderRadius:
+                          //                                     BorderRadius
+                          //                                         .circular(
+                          //                                             10),
+                          //                               ),
+                          //                               child: Image.file(
+                          //                                 File(_imageFileListM[
+                          //                                         index]
+                          //                                     .path),
+                          //                                 fit: BoxFit
+                          //                                     .contain,
+                          //                               ),
+                          //                             ),
+                          //                           ),
+                          //                         ));
+                          //                   },
+                          //                   itemCount:
+                          //                       _imageFileListM.length,
+                          //                 ),
+                          //                 ListView.builder(
+                          //                   physics:
+                          //                       const NeverScrollableScrollPhysics(),
+                          //                   shrinkWrap: true,
+                          //                   scrollDirection:
+                          //                       Axis.horizontal,
+                          //                   itemBuilder:
+                          //                       (BuildContext ctx,
+                          //                           int index) {
+                          //                     return SizedBox(
+                          //                         height: MediaQuery.of(
+                          //                                     context)
+                          //                                 .size
+                          //                                 .width *
+                          //                             0.2,
+                          //                         child: Card(
+                          //                           elevation: 0,
+                          //                           color: Colors
+                          //                               .transparent,
+                          //                           surfaceTintColor:
+                          //                               Colors
+                          //                                   .transparent,
+                          //                           margin:
+                          //                               const EdgeInsets
+                          //                                   .all(10),
+                          //                           shape:
+                          //                               RoundedRectangleBorder(
+                          //                             borderRadius:
+                          //                                 BorderRadius
+                          //                                     .circular(
+                          //                                         20.0),
+                          //                           ),
+                          //                           child: Align(
+                          //                             alignment: Alignment
+                          //                                 .center,
+                          //                             child: Container(
+                          //                               clipBehavior: Clip
+                          //                                   .antiAlias,
+                          //                               decoration:
+                          //                                   BoxDecoration(
+                          //                                 color: Colors
+                          //                                     .transparent,
+                          //                                 borderRadius:
+                          //                                     BorderRadius
+                          //                                         .circular(
+                          //                                             10),
+                          //                               ),
+                          //                               child:
+                          //                                   Image.network(
+                          //                                 webimages[
+                          //                                     index],
+                          //                                 fit: BoxFit
+                          //                                     .contain,
+                          //                               ),
+                          //                             ),
+                          //                           ),
+                          //                         ));
+                          //                   },
+                          //                   itemCount: webimages.length,
+                          //                 ),
+                          //                 ListView.builder(
+                          //                   physics:
+                          //                       const NeverScrollableScrollPhysics(),
+                          //                   scrollDirection:
+                          //                       Axis.horizontal,
+                          //                   shrinkWrap: true,
+                          //                   itemBuilder:
+                          //                       (BuildContext ctx,
+                          //                           int index) {
+                          //                     return SizedBox(
+                          //                         height: 200,
+                          //                         width: 200,
+                          //                         child: VideoPlay(
+                          //                             pathh: webvideos[
+                          //                                 index]));
+                          //                   },
+                          //                   itemCount: webvideos.length,
+                          //                 )
+                          //               ],
+                          //             ))),
                         ],
                       ),
                     ),
@@ -1699,6 +2338,38 @@ class _DetailPageState extends State<DetailPage> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       changeWeek();
+                                      // Future.delayed(Duration.zero, () {
+                                      //   Dialogs.materialDialog(
+                                      //     color: Colors.white,
+                                      //     msg:
+                                      //         'Grattis, du klarade $gortActivitiyDaysDoneCount/$gortActivitiyDaysCount aktiviteter',
+                                      //     title: 'Ny vecka',
+                                      //     // lottieBuilder: Lottie.asset(
+                                      //     // 'assets/cong_example.json',
+                                      //     // fit: BoxFit.contain,
+                                      //     // ),
+                                      //     context: context,
+                                      //     actions: [
+                                      //       ElevatedButton(
+                                      //         onPressed: () async {
+                                      //           await changeWeek();
+                                      //           FirebaseFirestore.instance
+                                      //               .collection(currentuser.uid)
+                                      //               .doc(documentName)
+                                      //               .update({
+                                      //             'currentweek': DateTime.now()
+                                      //                 .weekOfYear
+                                      //                 .toString(),
+                                      //           });
+
+                                      //           if (!mounted) return;
+                                      //           Navigator.of(context).pop();
+                                      //         },
+                                      //         child: const Text('Fortsätt'),
+                                      //       ),
+                                      //     ],
+                                      //   );
+                                      // });
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.white,
@@ -1812,6 +2483,21 @@ class _DetailPageState extends State<DetailPage> {
             ],
           ));
     }
+
+    //   void storeOldDates(List<int> weekdays) {
+    //     List<DateTime> oldDatesDone = [];
+    //     int year = 2023;
+    //     DateTime startDate = DateTime(year, 1, 1);
+    //     while (startDate.weekday != DateTime.monday) {
+    //       startDate = startDate.add(Duration(days: 1));
+    //     }
+    //     for (int weekday in weekdays) {
+    //       int offset = (weekday - 1) + (int.parse(currentweek) - 1) * 7;
+    //       DateTime date = startDate.add(Duration(days: offset));
+    //       oldDatesDone.add(date);
+    //       print(oldDatesDone);
+    //     }
+    //   }
   }
 
   Widget setupAlertDialoadContainer(context) {
@@ -2081,6 +2767,60 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
+  // Future<void> deleteFile(File file) async {
+  //   try {
+  //     if (await file.exists()) {
+  //       await file.delete();
+  //     }
+  //   } catch (e) {
+  //     // Error in getting access to the file.
+  //   }
+  // }
+
+  // void deleteFilesFromProject() async {
+  //   directory = (await getApplicationDocumentsDirectory()).path;
+  //   setState(() {
+  //     final mediaFiles = io.Directory('$directory/')
+  //         .listSync()
+  //         .whereType<File>()
+  //         .where((file) => file.path.split('/').last.contains(documentId));
+  //     Iterable<File> files = mediaFiles.whereType<File>();
+  //     for (final file in files) {
+  //       deleteFile(file);
+  //     }
+  //   });
+  // }
+
+  // void _listofImagesM() async {
+  //   directory = (await getApplicationDocumentsDirectory()).path;
+  //   setState(() {
+  //     final mediaFiles = io.Directory('$directory/')
+  //         .listSync()
+  //         .whereType<File>()
+  //         .where((file) =>
+  //             file.path.split('/').last.startsWith('imageM$documentId'));
+  //     Iterable<File> files = mediaFiles.whereType<File>();
+  //     for (final file in files) {
+  //       _imageFileListM.add(file);
+  //     }
+  //   });
+  // }
+
+  // void _listofVideosM() async {
+  //   directory = (await getApplicationDocumentsDirectory()).path;
+  //   setState(() {
+  //     final mediaFiles = io.Directory('$directory/')
+  //         .listSync()
+  //         .whereType<File>()
+  //         .where((file) =>
+  //             file.path.split('/').last.startsWith('videoM$documentId'));
+  //     Iterable<File> files = mediaFiles.whereType<File>();
+  //     for (final file in files) {
+  //       _videoFileListM.add(file);
+  //     }
+  //   });
+  // }
+
   Future<XFile> _fileFromImageUrl(String url) async {
     final response = await http.get(Uri.parse(url));
 
@@ -2160,6 +2900,56 @@ class _DetailPageState extends State<DetailPage> {
     final linkurl = await downloadUrl.ref.getDownloadURL();
     return linkurl;
   }
+
+  // writeMImage(XFile media, String mediaIndex, String doc) async {
+  //   final Directory directory = await getApplicationDocumentsDirectory();
+  //   final File file = File(
+  //       '${directory.path}/imageM$doc${DateTime.now().toString().trim().replaceAll(RegExp('[^A-Za-z0-9]'), '').replaceAll(' ', '')}.jpg');
+  //   await file.writeAsBytes(await media.readAsBytes());
+  // }
+
+  // Future saveMImages(String docName) async {
+  //   int index = 0;
+  //   for (var x in imageFileListM) {
+  //     writeMImage(x, index.toString(), docName);
+  //     index++;
+  //   }
+  //   reloadimages();
+  // }
+
+  // Future reloadimages() async {
+  //   imageFileListM.clear();
+  //   _imageFileListM.clear();
+
+  //   Future.delayed(const Duration(seconds: 0, milliseconds: 600), () {
+  //     _listofImagesM();
+  //   });
+  // }
+
+  // Future reloadvideos() async {
+  //   videoFileListM.clear();
+  //   _videoFileListM.clear();
+
+  //   Future.delayed(const Duration(seconds: 0, milliseconds: 600), () {
+  //     _listofVideosM();
+  //   });
+  // }
+
+  // writeMVideo(XFile media, String mediaIndex, String doc) async {
+  //   final Directory directory = await getApplicationDocumentsDirectory();
+  //   final File file = File(
+  //       '${directory.path}/videoM$doc${DateTime.now().toString().trim().replaceAll(RegExp('[^A-Za-z0-9]'), '').replaceAll(' ', '')}.mp4');
+  //   await file.writeAsBytes(await media.readAsBytes());
+  // }
+
+  // saveMVideos(String docName) {
+  //   int index = 0;
+  //   for (var x in videoFileListM) {
+  //     writeMVideo(x, index.toString(), docName);
+  //     index++;
+  //   }
+  //   reloadvideos();
+  // }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getnotificationdata(
       String pload) async {
@@ -2254,6 +3044,12 @@ class _DetailPageState extends State<DetailPage> {
         newweek = true;
       }
     }
+    // var frequencynumber = ["1", "2", "3", "4", "5", "6", "7"];
+    // var lst1 = ["t1", "t2", "t3", "t4"];
+    // List<String> lst2 = ["2", "4", "5"];
+    // var set1 = Set.from(frequencynumber);
+    // var set2 = Set.from(lst2);
+    // print(List.from(Set.from(frequencynumber).difference(set2)));
   }
 
   List<String> checkedItemList = [];
@@ -2422,6 +3218,7 @@ class _ActivityCardState extends State<ActivityCard> {
   @override
   void initState() {
     super.initState();
+    _createInterstitialAd();
     checkSubscription();
   }
 
@@ -2573,6 +3370,48 @@ class _ActivityCardState extends State<ActivityCard> {
         subscribeStatus = true;
       });
     }
+  }
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: Platform.isAndroid
+            ? 'ca-app-pub-1394145303258614/7920752813'
+            : 'ca-app-pub-3940256099942544/4411468910',
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            _interstitialAd = ad;
+            _numInterstitialLoadAttempts = 0;
+            _interstitialAd.setImmersiveMode(true);
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            _numInterstitialLoadAttempts += 1;
+            _interstitialAd = null;
+            if (_numInterstitialLoadAttempts < 5) {
+              _createInterstitialAd();
+            }
+          },
+        ));
+  }
+
+  void _showInterstitialAd() {
+    if (_interstitialAd == null) {
+      return;
+    }
+    _interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        ad.dispose();
+        _createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        ad.dispose();
+        _createInterstitialAd();
+      },
+    );
+    _interstitialAd.show();
+    _interstitialAd = null;
   }
 
   double containerHeight;
@@ -2773,7 +3612,9 @@ class _ActivityCardState extends State<ActivityCard> {
                                   C2ChipStyle.filled(color: Colors.green),
                             ),
                             onChanged: (List<String> val) async {
-                              if (subscribeStatus == false) {}
+                              if (subscribeStatus == false) {
+                                _showInterstitialAd();
+                              }
 
                               /// First take a list of activities
                               final List<Map<String, dynamic>> act = [];
@@ -3480,7 +4321,9 @@ class _ActivityCardState extends State<ActivityCard> {
                   selectedStyle: C2ChipStyle.filled(color: Colors.green),
                 ),
                 onChanged: (List<String> val) {
-                  if (subscribeStatus == false) {}
+                  if (subscribeStatus == false) {
+                    _showInterstitialAd();
+                  }
 
                   /// First take a list of activities
                   final List<Map<String, dynamic>> act = [];
@@ -3585,27 +4428,48 @@ class CalendarPage2State extends State<CalendarPage2> {
   Widget build(BuildContext context) {
     presentDates = widget.presentDates;
     absentDates = widget.absentDates;
+
+    Widget _eventIcon = new Container(
+      decoration: new BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(1000)),
+          border: Border.all(color: Colors.blue, width: 2.0)),
+      child: new Icon(
+        Icons.person,
+        color: Colors.amber,
+      ),
+    );
+
     for (int i = 0; i < presentDates.length; i++) {
+      print(DateFormat('yyyy, MM, dd')
+          .format(presentDates[i].toDate())
+          .toString());
       setState(() {
         _markedDateMap.add(
-          presentDates[i].toDate(),
-          Event(
-            date: presentDates[i].toDate(),
-            title: 'Event 5',
-            icon: _presentIcon(
-              presentDates[i].toDate().day.toString(),
-            ),
-          ),
-        );
+            DateTime.parse(DateFormat('yyyy-MM-dd')
+                .format(presentDates[i].toDate())
+                .toString()),
+            new Event(
+                date: DateTime.parse(DateFormat('yyyy-MM-dd')
+                    .format(presentDates[i].toDate())
+                    .toString()),
+                title: 'Event 5',
+                icon: _presentIcon(
+                  presentDates[i].toDate().day.toString(),
+                )));
       });
     }
 
     for (int i = 0; i < absentDates.length; i++) {
       setState(() {
         _markedDateMap.add(
-          absentDates[i].toDate(),
+          DateTime.parse(DateFormat('yyyy-MM-dd')
+              .format(absentDates[i].toDate())
+              .toString()),
           Event(
-            date: absentDates[i].toDate(),
+            date: DateTime.parse(DateFormat('yyyy-MM-dd')
+                .format(absentDates[i].toDate())
+                .toString()),
             title: 'Event 5',
             icon: _absentIcon(
               absentDates[i].toDate().day.toString(),
